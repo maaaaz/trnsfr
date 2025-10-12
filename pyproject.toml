@@ -24,4 +24,4 @@ version = {attr = "trnsfr.trnsfr.VERSION"}
 Homepage = "https://github.com/maaaaz/trnsfr"
 
 [project.scripts]
-pyalienvaultcli = "trnsfr.trnsfr:main"
+trnsfr = "trnsfr.trnsfr:main"
