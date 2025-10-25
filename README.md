@@ -12,27 +12,27 @@ Usage
 $ pip install trnsfr
 
 $ trnsfr
-usage: trnsfr.py [-h] [-s SERVER] [-k MAX_DAYS] [-t MAX_DOWNLOADS] [-d]
-                 [-v | -n | -q] [-e ENCRYPT_PASSWORD] [-m {clamav,virustotal}]
+usage: trnsfr.py [-h] [-s SERVER] [-i] [-k MAX_DAYS] [-t MAX_DOWNLOADS] [-d] [-v | -n | -q] [-e ENCRYPT_PASSWORD]
+                 [-m {clamav,virustotal}]
                  file [file ...]
 
-version: 1.0
+version: 1.2
 
 positional arguments:
   file                  File(s) to upload
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
 
-Server parameters:
-  -s SERVER, --server SERVER
-                        Server instance URL (default:
-                        "https://transfer.adminforge.de/")
+Connection parameters:
+  -s, --server SERVER   Server instance URL (default: "https://transfer.adminforge.de/")
+  -i, --ignore-tls-errors
+                        Ignore TLS validation errors (default: False)
 
 Upload parameters:
-  -k MAX_DAYS, --max-days MAX_DAYS
+  -k, --max-days MAX_DAYS
                         Maximum number of days to keep file on the server
-  -t MAX_DOWNLOADS, --max-downloads MAX_DOWNLOADS
+  -t, --max-downloads MAX_DOWNLOADS
                         Maximum number of times that file can be downloaded
 
 Output parameters:
@@ -43,28 +43,18 @@ Display parameters:
   -v, --verbose         Verbose output (default: False)
   -n, --no-progress-bar
                         Do not display the progress bar (default: False)
-  -q, --quiet           Display only the download link without progress bar
-                        (default: False)
+  -q, --quiet           Display only the download link without progress bar (default: False)
 
 Confidentiality parameters:
-  -e ENCRYPT_PASSWORD, --encrypt-password ENCRYPT_PASSWORD
-                        Encrypt file with that password on the server-side
-                        (default: None)
+  -e, --encrypt-password ENCRYPT_PASSWORD
+                        Encrypt file with that password on the server-side (default: None)
 
 Malware scan parameters:
-  -m {clamav,virustotal}, --scan-malware {clamav,virustotal}
-                        Scan for malware with ClamAV or Virustotal (possible
-                        values: ['clamav', 'virustotal'] ; default: None): /!\
-                        this feature can be unavailable on the server and
-                        hence failing the whole upload ! (default: False)
-
+  -m, --scan-malware {clamav,virustotal}
+                        Scan for malware with ClamAV or Virustotal (default: None): /!\ this feature can be
+                        unavailable on the server and hence failing the whole upload !
 ```
   
-
-Changelog
----------
-* version 1.0 - 2025-10-12: Initial commit
-
 
 Credits
 -------

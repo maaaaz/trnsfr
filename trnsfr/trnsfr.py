@@ -6,7 +6,7 @@ import sys
 import argparse
 import time
 import posixpath
-
+import urllib3
 import code
 import pprint
 
@@ -17,7 +17,7 @@ import validators
 
 
 # Globals
-VERSION = '1.1'
+VERSION = '1.2'
 
 INSTANCE_URL = 'https://transfer.adminforge.de/'
 
@@ -25,8 +25,9 @@ INSTANCE_URL = 'https://transfer.adminforge.de/'
 parser = argparse.ArgumentParser(description="version: " + VERSION)
 parser.add_argument('file', help = 'File(s) to upload', nargs = '+')
 
-server_grp = parser.add_argument_group('Server parameters')
-server_grp.add_argument('-s', '--server', help='Server instance URL (default: "%s")' % INSTANCE_URL, default = INSTANCE_URL)
+connect_grp = parser.add_argument_group('Connection parameters')
+connect_grp.add_argument('-s', '--server', help='Server instance URL (default: "%s")' % INSTANCE_URL, default = INSTANCE_URL)
+connect_grp.add_argument('-i', '--ignore-tls-errors', help='Ignore TLS validation errors (default: False)', action='store_true', default = False)
 
 upload_grp = parser.add_argument_group('Upload parameters')
 upload_grp.add_argument('-k', '--max-days', help='Maximum number of days to keep file on the server', type = int, default = None)
@@ -48,7 +49,7 @@ security_grp = parser.add_argument_group('Malware scan parameters')
 malware_scan_provider_clamav = 'clamav'
 malware_scan_provider_virustotal = 'virustotal'
 malware_scan_choices = [malware_scan_provider_clamav, malware_scan_provider_virustotal]
-security_grp.add_argument('-m', '--scan-malware', help=r'Scan for malware with ClamAV or Virustotal (possible values: %s ; default: None): /!\ this feature can be unavailable on the server and hence failing the whole upload ! (default: False)' % malware_scan_choices, choices = malware_scan_choices, type = str.lower, default = False)
+security_grp.add_argument('-m', '--scan-malware', help=r'Scan for malware with ClamAV or Virustotal (default: None): /!\ this feature can be unavailable on the server and hence failing the whole upload !' % malware_scan_choices, choices = malware_scan_choices, type = str.lower, default = False)
 
 
 def upload_files(options):
@@ -102,11 +103,14 @@ def upload_files(options):
                     delete_url = ''
                     
                     try:
+                        if options.ignore_tls_errors:
+                            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                        
                         if request_method == 'post':
-                            req = requests.post(remote_url, data=m, headers=headers)
+                            req = requests.post(remote_url, data=m, headers=headers, verify=not(options.ignore_tls_errors))
                         
                         elif request_method == 'put':
-                            req = requests.put(remote_url, data=m, headers=headers)
+                            req = requests.put(remote_url, data=m, headers=headers, verify=not(options.ignore_tls_errors))
                             
                         if req.ok:
                             download_link = req.text.strip()
@@ -133,7 +137,9 @@ def upload_files(options):
                     except Exception as e:
                         print('[!] Exception while uploading "%s": "%s"' % (file_to_upload, e))
                         pass
-    
+        else:
+            print('\n[!] File to upload "%s" can not be found or is not a file !' % file_to_upload)
+        
     return None
 
 
