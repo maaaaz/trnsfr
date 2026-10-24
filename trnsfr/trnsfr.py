@@ -2,13 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import argparse
-import time
 import posixpath
 import urllib3
-import code
-import pprint
 
 import requests
 import requests_toolbelt
@@ -17,7 +13,7 @@ import validators
 
 
 # Globals
-VERSION = '1.2'
+VERSION = '1.4'
 
 INSTANCE_URL = 'https://transfer.adminforge.de/'
 
@@ -123,19 +119,19 @@ def upload_files(options):
                                     delete_url = delete_link
                             
                             if options.verbose:
-                                print('[+] Download URL: "%s"' % download_url)
+                                tqdm.tqdm.write('[+] Download URL: "%s"' % download_url)
                                 if options.show_delete_url:
-                                    print('[+] Delete URL:   "%s"' % delete_url)
+                                    tqdm.tqdm.write('[+] Delete URL:   "%s"' % delete_url)
                             else:
-                                print('%s' % download_url)
+                                tqdm.tqdm.write('%s' % download_url)
                                 if options.show_delete_url:
-                                    print('%s' % delete_url)
+                                    tqdm.tqdm.write('%s' % delete_url)
                             
                         else:
-                            print('[!] Error while uploading "%s" | HTTP return code %s | Returned response "%s"' % (file_to_upload, req.status_code, req.content.decode('utf-8').strip()))
+                            tqdm.tqdm.write('[!] Error while uploading "%s" | HTTP return code %s | Returned response "%s"' % (file_to_upload, req.status_code, req.content.decode('utf-8').strip()))
                     
                     except Exception as e:
-                        print('[!] Exception while uploading "%s": "%s"' % (file_to_upload, e))
+                        tqdm.tqdm.write('[!] Exception while uploading "%s": "%s"' % (file_to_upload, e))
                         pass
         else:
             print('\n[!] File to upload "%s" can not be found or is not a file !' % file_to_upload)

@@ -12,11 +12,11 @@ Usage
 $ pip install trnsfr
 
 $ trnsfr
-usage: trnsfr.py [-h] [-s SERVER] [-i] [-k MAX_DAYS] [-t MAX_DOWNLOADS] [-d] [-v | -n | -q] [-e ENCRYPT_PASSWORD]
+usage: trnsfr [-h] [-s SERVER] [-i] [-k MAX_DAYS] [-t MAX_DOWNLOADS] [-d] [-v | -n | -q] [-e ENCRYPT_PASSWORD]
                  [-m {clamav,virustotal}]
                  file [file ...]
 
-version: 1.2
+version: 1.4
 
 positional arguments:
   file                  File(s) to upload
